@@ -1,0 +1,33 @@
+﻿<div class="panel panel-default {{$odd ? 'ui-ribbon-container ui-ribbon-danger' : ''}}"  ng-repeat="item in data.home_products">
+	<div class="ui-ribbon-wrapper" ng-if="$odd">
+		<div class="ui-ribbon">
+			30% Off
+		</div>
+	</div>
+	<div class="panel-heading">
+		<span class="glyphicon glyphicon-th"></span>
+		{{item.type}}
+	</div>
+	<div class="panel-body">
+		<div class = "row">
+			<div class="col-md-3 col-sm-4" ng-repeat="product in item.products | filter:categoryFilterFn | range:hp_pager[$index].cur:hp_page_size" style="padding-left:25px;padding-right:25px;">
+				<div class="mix-inner">
+				<a href = "#" ng-click="viewProductDetail(product)" style="text-align:center;">
+					<img class = "img-responsive" src="/static/images/productImages/{{product.id}}_1_160.jpg">
+					<div style="overflow:hidden;word-break:break-all;height:32px;line-height: 16px;">{{product.name}}</div>
+					<div style="overflow:hidden;word-break:break-all;height:30px;line-height: 16px;"><span style="color:black;">商城价: </span><span style="color:red; font-weight:bold;">{{product.price_now | currency:'￥'}}</span></div>
+				</a>				
+				</div>
+			</div>
+		</div>		
+	</div>
+	<div class = "row">
+		<ul class="pagination pagination-alt pull-right"  ng-show="showPagination(item.products, hp_page_size, hp_pager[$index])" style="margin-right:30px;">
+			<li ng-class="setIndex(item, $index)"><a href="javascript:void(0);" ng-click="prevPage(hp_pager[$index])"><i class="fa fa-angle-left"></i></a></li>						
+			<li ng-class="getPageClass(hp_pager[item.t_index], page, 'active')" ng-repeat="page in getPages(hp_pager[$index])">
+				<a href="javascript:void(0);"  ng-click="selectPage(hp_pager[item.t_index], page)">{{page}}</a>
+			</li>
+			<li><a href="javascript:void(0);"  ng-click="nextPage(hp_pager[$index])"><i class="fa fa-angle-right"></i></a></li>
+		</ul>	
+	</div>
+</div>

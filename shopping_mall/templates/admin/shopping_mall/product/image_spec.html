@@ -1,0 +1,17 @@
+{% load custom_tags %}
+{% if product_id %}
+    <img id='t_Img' style='height:320px; width:320px; border:solid 1px mediumblue;'
+         src='/static/images/productImages/{{ product_id }}_{{ upload_check|first_valid }}_t.jpg'>
+    <div style="width: 450px; float: right;">
+        {% for idx in upload_check %}
+            {% if idx != ',' and idx != '0' %}
+                <img style='width:60px; height: 60px; margin-left: 2px; margin-top: 3px; border:solid 1px mediumblue;'
+                     src='/static/images/productImages/{{ product_id }}_{{ idx }}_t.jpg?{{ "1a2b3c4e5d6f7g"|random }}'
+                     onclick="$('#t_Img').attr('src', this.src); sub_image_to_be_deleted = this;del_idx={{ idx }}">
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    <img style='height:320px; width:320px; border:solid 1px mediumblue;'
+         src="/static/images/productImages/default_t.jpg">
+{% endif %}

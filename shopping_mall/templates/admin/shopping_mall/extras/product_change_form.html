@@ -1,0 +1,185 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+{% load static %}
+{% load custom_tags %}
+
+{% block field_sets %}
+    <script src="{% static 'javascripts/ajaxupload.3.5.js' %}" type="text/javascript"></script>
+    <script src="{% static 'javascripts/jquery-1.8.2.js' %}" type="text/javascript"></script>
+    <script src="{% static 'javascripts/myAjax.js' %}" type="text/javascript"></script>
+
+    {% for fieldset in adminform %}
+        <fieldset class="module aligned {{ fieldset.classes }}">
+            {% if fieldset.name %}<h2>{{ fieldset.name }}</h2>{% endif %}
+            {% if fieldset.description %}
+                <div class="description">{{ fieldset.description|safe }}</div>
+            {% endif %}
+            {% for line in fieldset %}
+                <div class="form-row{% if line.fields|length_is:'1' and line.errors %} errors{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% endfor %}">
+                    {% if line.fields|length_is:'1' %}{{ line.errors }}{% endif %}
+                    {% for field in line %}
+                        <div{% if not line.fields|length_is:'1' %}
+                            class="field-box{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}"{% elif field.is_checkbox %}
+                            class="checkbox-row"{% endif %}>
+                            {% if not line.fields|length_is:'1' and not field.is_readonly %}
+                                {{ field.errors }}{% endif %}
+                            {% if field.is_checkbox %}
+                                {{ field.field }}{{ field.label_tag }}
+                            {% elif field.field.name == 'weight_unit' %}
+                                <select name="weight_unit" id="id_weight_unit">
+                                    <option value="1.0" {% if field.field.value == 1.0 %}selected="selected"{% endif %}>
+                                        Kg
+                                    </option>
+                                    <option value="0.001"
+                                            {% if field.field.value == 0.001 %}selected="selected"{% endif %}>g
+                                    </option>
+                                    <option value="1000"
+                                            {% if field.field.value == 1000 %}selected="selected"{% endif %}>t
+                                    </option>
+                                    <option value="0.5" {% if field.field.value == 0.5 %}selected="selected"{% endif %}>
+                                        斤
+                                    </option>
+                                </select>
+                            {% elif field.field.name == 'upload_check' %}
+                                <input type="hidden" name="upload_check" id="upload_check"
+                                       value="{% if field.field.value %}{{ field.field.value }}{% else %}0{% endif %}">
+                                <div>
+                                    <div id='image_detail' style="width: 780px;">
+                                        {% include "admin/shopping_mall/product/image_spec.html" with product_id=object_id upload_check=field.field.value only %}
+                                    </div>
+                                    <div style="left: 350px; top: 120px; margin-top: 15px; margin-left: 10px; font-size: 16px;">
+                                        <span id="btnUploadData"
+                                              style="float: left; width : 90px; color: red;">选择图片</span>
+                                        <a onclick="javascript: del_sub_image();" href="javascript: void(0);">删除</a>
+                                    </div>
+                                </div>
+                            {% elif field.field.name == 'detail_info' %}
+                                <style>
+                                    #rightTitle {
+                                        text-align: right;
+                                        background-color: #E5EAEE;
+                                        border: 1 solid mediumblue;
+                                        padding: 3px;
+                                        height: 24px;
+                                    }
+
+                                    #topTitle {
+                                        text-align: right;
+                                        background-color: #31666A;
+                                        border: solid 1 mediumblue;
+                                        padding: 3px;
+                                        height: 24px;
+                                        color: white;
+                                    }
+
+                                    #leftContent {
+                                        text-align: left;
+                                        background-color: #FFFFFF;
+                                        border: solid 1 mediumblue;
+                                        padding: 3px;
+                                    }
+                                </STYLE>
+                                <table style="border:solid 1px #999;border-collapse: collapse; ">
+                                    <tr>
+                                        <TD style='border:solid 1px #999; text-align:left; text-indent:10px; font-weight:bold;'
+                                            colSpan=2 id='rightTitle'>主体
+                                        </TD>
+                                    </tr>
+                                    {% for row in field.field.value|split:'@@@EXE@@@' %}
+                                        <tr>
+                                            {% if row|split:'###EXE###'|length_is:"1" %}
+                                                {% for item in row|split:'###EXE###' %}
+                                                    <TD style='border:solid 1px #999; text-align:left; text-indent:10px; font-weight:bold;'
+                                                        colSpan=2 id='rightTitle'>
+                                                        {{ item }}
+                                                    </TD>
+                                                {% endfor %}
+                                            {% else %}
+                                                {% for item in row|split:'###EXE###' %}
+                                                    {% if forloop.first %}
+                                                        <TD style="border:solid 1px #999;width:100px;" id="rightTitle">
+                                                            {{ item }}
+                                                        </TD>
+                                                    {% else %}
+                                                        <TD style="border:solid 1px #999;width:700px;" id="leftContent">
+                                                            {{ item }}
+                                                        </TD>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                            {% else %}
+                                {{ field.label_tag }}
+                                {% if field.is_readonly %}
+                                    <p>{{ field.contents|linebreaksbr }}</p>
+                                {% else %}
+                                    {{ field.field }}
+                                {% endif %}
+                            {% endif %}
+                            {% if field.field.help_text %}
+                                <p class="help">{{ field.field.help_text|safe }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </fieldset>
+    {% endfor %}
+    <script language="javascript">
+        var sub_image_to_be_deleted;
+        var del_idx;
+        var myUpload;
+        $(document).ready(function () {
+            myUpload = new AjaxUpload($("#btnUploadData"),
+                    {
+                        action: '/First/image_upload/{{ object_id|default:'0' }}/',
+                        data: {},
+                        name: 'product_image',
+                        onChange: function (file, ext) {
+                            if (!(ext && /^(jpg|gif|jpeg)$/.test(ext))) {
+                                $('#status').text('Only JPG, gif files are allowed');
+                                return false;
+                            }
+                            this._settings['data'] = {upload_check: get_new_index()};         // important !!!
+                        },
+                        onComplete: function (file, ext) {
+                            var upload_check = $('#upload_check').attr('value') + ',' + get_new_index();
+                            var imgIndexArr = upload_check.split(",");
+                            imgIndexArr = imgIndexArr.sort();
+                            $('#upload_check').attr('value', imgIndexArr.join(','));
+
+                            ajaxFunc('get', '/First/image_spec/{{ object_id|default:'0' }}/', "#image_detail", {upload_check: imgIndexArr.join(',')});
+                        }
+                    });
+        });
+
+        function get_new_index() {
+            var i = 0;
+            var upload_check = $('#upload_check').attr('value');
+            var imgIndexArr = upload_check.split(",");
+            imgIndexArr = imgIndexArr.sort();
+            for (; i < imgIndexArr.length; i++)
+                if (i != imgIndexArr[i])
+                    break;
+            return i;
+        }
+
+        function del_sub_image() {
+            var upload_check = $('#upload_check').attr('value');
+            var imgIndexArr = upload_check.split(",");
+            for (var i = 0; i < imgIndexArr.length; i++) {
+                if (del_idx == imgIndexArr[i]) {
+                    imgIndexArr.splice(i, 1);
+                    break;
+                }
+            }
+
+            upload_check = imgIndexArr.join(',');
+            $('#upload_check').attr('value', upload_check);
+            $({% trans "sub_image_to_be_deleted" %}).remove();
+        }
+    </script>
+{% endblock %}

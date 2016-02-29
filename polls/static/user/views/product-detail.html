@@ -1,0 +1,235 @@
+﻿<div class="title">
+	<h3><strong>{{data.selectedProduct.name}}</strong></h3>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<a class="fancybox-button" href="/static/images/productImages/{{data.selectedProduct.id}}_1_700.jpg" title="First Detail Image Name" data-rel="fancybox-button">
+			<img class="img-responsive" src="/static/images/productImages/{{data.selectedProduct.id}}_1_700.jpg" alt="">
+		</a>
+		<a class="fancybox-button" ng-repeat="item in data.uploadCheck" href="/static/images/productImages/{{data.selectedProduct.id}}_{{item}}_700.jpg" title="Third Detail Image Name" data-rel="fancybox-button"></a>
+	</div>
+	<div class="col-md-6">
+		<div class="well">
+			<div class="lead">商品编码:{{data.selectedProduct.code}}</div>			
+			<div class="alert alert-info">
+				商 城 价: <strong>{{data.selectedProduct.price_now | currency:'￥'}}</strong>
+			</div>			
+			<div class="alert alert-danger">
+				市 场 价: {{data.selectedProduct.market_price | currency}}
+			</div>
+			<div class="lead">库    存: 有货 </div>			
+			<div class="lead">顾客评分: 已有0人评论 </div>						
+			<button ng-click="addProductToCart(data.selectedProduct)" class="btn btn-success">
+				加入购物车
+			</button>
+			<button ng-click="addProductToCart(data.selectedProduct)" class="btn btn-warning">
+				收藏此商品
+			</button>
+		</div>
+	</div>
+</div>
+<div class="row" style="margin-top:30px;">
+	<!--BEGIN TABS-->
+	<div class="tabbable tabbable-custom">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#tab_1_1" data-toggle="tab">商品介绍</a></li>
+			<li class=""><a href="#tab_1_2" data-toggle="tab">规格参数</a></li>
+			<li class=""><a href="#tab_1_3" data-toggle="tab">包装清单</a></li>
+			<li class=""><a href="#tab_1_4" data-toggle="tab">售后服务</a></li>
+			<li class=""><a href="#tab_1_5" data-toggle="tab">视频</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab_1_1">
+				<span>商品名称：{{data.selectedProduct.name}}{{data.selectedProduct.type}}</span><br>
+				<span>商品产地：{{data.selectedProduct.origin_place}}</span>  <br>  
+				<div>商品毛重：{{data.selectedProduct.weight}}
+					<span ng-if="data.selectedProduct.weight_unit == '1'">kg</span>
+					<span ng-if="data.selectedProduct.weight_unit == '0.001'">g</span>
+					<span ng-if="data.selectedProduct.weight_unit == '1000'">t</span>
+					<span ng-if="data.selectedProduct.weight_unit == '0.5'">斤</span>
+				</div>
+				<span id='itemTime'>上架时间：{{data.selectedProduct.reg_date}}</span>    
+			</div>
+			<div class="tab-pane" id="tab_1_2">
+				<style> 
+					#rightTitle{text-align: right; background-color: #E5EAEE; border: solid 1 mediumblue;padding: 3px; height:24px;}
+					#topTitle{text-align: right; background-color: #31666A; border: solid 1 mediumblue;padding: 3px; height:24px; color:white;}
+					#leftContent{text-align: left; background-color: #FFFFFF; border: solid 1 mediumblue;padding: 3px;}
+				</STYLE>			
+				<table style="border:solid 1px #999;border-collapse: collapse; ">
+					<tr><TD style='border:solid 1px #999; text-align:left; text-indent:10px; font-weight:bold;' colSpan=2 id='rightTitle'>主体</TD></tr>
+					<tr ng-repeat="row in data.selectedProduct.detail_info.split('@@@EXE@@@')">
+						<TD style='border:solid 1px #999; text-align:left; text-indent:10px; font-weight:bold;' colSpan=2 id='rightTitle' ng-repeat="item in row.split('###EXE###')" ng-if="row.split('###EXE###').length == 1">			
+							{{item}}
+						</TD>
+						<TD style="border:solid 1px #999;width:{{$first ? '100px' : '700px'}};" id="{{$first ? 'rightTitle' : 'leftContent'}}" ng-repeat="item in row.split('###EXE###')" ng-if="row.split('###EXE###').length != 1">			
+							{{item}}
+						</TD>
+					</tr>
+				</table>				
+			</div>
+			<div class="tab-pane" id="tab_1_3">
+				{{data.selectedProduct.package}}
+			</div>
+			<div class="tab-pane" id="tab_1_4">
+				{{data.selectedProduct.service}}
+			</div>
+			<div class="tab-pane" id="tab_1_5">
+				<video controls>
+					<source src="../video/3.mp4" type="video/mp4">
+					<source src="../video/3.ogg" type="video/ogg">
+					Your browser does not support the video tag.
+				</video>
+			</div>
+		</div>
+	</div>
+	<!--END TABS-->
+							
+</div>
+<div class="row" style="margin-top:30px;">
+	<!--BEGIN TABS-->
+	<div class="col-md-9">
+	<div class="tabbable tabbable-custom">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#tab_2_1" data-toggle="tab">好评</a></li>
+			<li class=""><a href="#tab_2_2" data-toggle="tab">中评</a></li>
+			<li class=""><a href="#tab_2_3" data-toggle="tab">差评</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab_2_1">
+				<div class="row">
+					<div class="col-md-3">
+						<span>好评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 70%;"></div>
+						</div>
+						<span>中评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 20%;"></div>
+						</div>
+						<span>差评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 10%;"></div>
+						</div>
+						<form action="" class="smart-form nostyle">
+							<div class="rating nostyle">
+								<input type="radio" name="stars-rating" id="stars-rating-15" class="nostyle">
+								<label for="stars-rating-15"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-14" class="nostyle" checked>
+								<label for="stars-rating-14"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-13" class="nostyle">
+								<label for="stars-rating-13"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-12" class="nostyle">
+								<label for="stars-rating-12"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-11" class="nostyle">
+								<label for="stars-rating-11"><i class="fa fa-star"></i></label>			
+							</div>顾客评分:
+						</form>
+					</div>
+					<div class="col-md-3">
+						<p style="font-size:16px;color:blue;font-weight:bold;"> 已有 0 人评价</p>
+						<p style="font-size:16px;color:orange;font-weight:bold;">好评: 0人(0%)</p>
+					</div>
+					<div class="col-md-3">
+						<p>我在商城购买过此商品</p>
+						<button class="btn btn-success">
+							我要发票评论
+						</button>
+						<p><br>查看全部评价</p>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="tab_2_2">
+				<div class="row">
+					<div class="col-md-3">
+						<span>好评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 40%;"></div>
+						</div>
+						<span>中评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 60%;"></div>
+						</div>
+						<span>差评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 0%;"></div>
+						</div>
+						<form action="" class="smart-form nostyle">
+							<div class="rating nostyle">
+								<input type="radio" name="stars-rating" id="stars-rating-15" class="nostyle">
+								<label for="stars-rating-15"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-14" class="nostyle">
+								<label for="stars-rating-14"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-13" class="nostyle" checked>
+								<label for="stars-rating-13"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-12" class="nostyle">
+								<label for="stars-rating-12"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-11" class="nostyle">
+								<label for="stars-rating-11"><i class="fa fa-star"></i></label>			
+							</div>顾客评分:
+						</form>
+					</div>
+					<div class="col-md-3">
+						<p style="font-size:16px;color:blue;font-weight:bold;"> 已有 0 人评价</p>
+						<p style="font-size:16px;color:orange;font-weight:bold;">中评: 0人(0%)</p>
+					</div>
+					<div class="col-md-3">
+						<p>我在商城购买过此商品</p>
+						<button class="btn btn-success">
+							我要发票评论
+						</button>
+						<br><p><br>查看全部评价</p>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="tab_2_3">
+				<div class="row">
+					<div class="col-md-3">
+						<span>好评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 10%;"></div>
+						</div>
+						<span>中评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 20%;"></div>
+						</div>
+						<span>差评<span>
+						<div class="progress progress-xs" style="display:block-inline;">
+							<div class="progress-bar bg-color-blue" role="progressbar" style="width: 70%;"></div>
+						</div>
+						<form action="" class="smart-form nostyle">
+							<div class="rating nostyle">
+								<input type="radio" name="stars-rating" id="stars-rating-15" class="nostyle">
+								<label for="stars-rating-15"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-14" class="nostyle">
+								<label for="stars-rating-14"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-13" class="nostyle">
+								<label for="stars-rating-13"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-12" class="nostyle">
+								<label for="stars-rating-12"><i class="fa fa-star"></i></label>
+								<input type="radio" name="stars-rating" id="stars-rating-11" class="nostyle" checked>
+								<label for="stars-rating-11"><i class="fa fa-star"></i></label>			
+							</div>顾客评分:
+						</form>
+					</div>
+					<div class="col-md-3">
+						<p style="font-size:16px;color:blue;font-weight:bold;"> 已有 0 人评价</p>
+						<p style="font-size:16px;color:orange;font-weight:bold;">差评: 0人(0%)</p>
+					</div>
+					<div class="col-md-3">
+						<p>我在商城购买过此商品</p>
+						<button class="btn btn-success">
+							我要发票评论
+						</button>
+						<p><br>查看全部评价</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--END TABS-->
+    </div>									
+	<div class="col-md-3">
+		<div class="chart pie_chart"></div>
+	</div>					
+</div>

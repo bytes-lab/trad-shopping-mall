@@ -1,0 +1,30 @@
+﻿<div class="box" id = "cat_product">
+	<div class="title">
+		<h4>
+			<span>商 品 </span>
+			<!--<span class="badge badge-important">{{$index + 1}}</span>-->
+		</h4>
+		<a style="display: inline;" href="#" class="minimize">Minimize</a>
+	</div>
+	<div class="content">
+		<div class = "row">
+			<div class="col-md-3" ng-repeat="item in data.product_all | filter:categoryFilterFn | range:any_pager.cur:data.pageSize">
+				<div class="mix-inner">
+				<a href = "#" ng-click="viewProductDetail(item)" style="text-align:center;">
+					<img src="/static/images/productImages/{{item.id}}_1_160.jpg" alt="Product Image" default-image>
+					<div style="overflow:hidden;word-break:break-all;height:32px;line-height: 16px;">{{item.name}}</div>
+					<div style="overflow:hidden;word-break:break-all;height:30px;line-height: 16px;"><span style="color:black;">商城价: </span><span style="color:red; font-weight:bold;">{{item.price_now | currency:'￥'}}</span></div>
+				</a>				
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="pull-right btn-group" ng-show="showPagination(data.product_all, data.pageSize, any_pager)">
+		<a class="btn btn-default" ng-click="prevPage(any_pager)"> < </a>
+		<a ng-repeat="page in getPages(any_pager)" ng-click="selectPage(any_pager, page)" class="btn btn-default" ng-class="getPageClass(any_pager, page)">
+			{{page}}
+		</a>
+		<a class="btn btn-default" ng-click="nextPage(any_pager)"> > </a>
+	</div>
+
+</div>

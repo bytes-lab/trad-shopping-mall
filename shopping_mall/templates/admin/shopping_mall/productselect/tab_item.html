@@ -1,0 +1,185 @@
+{% load custom_tags %}
+
+<div id="tabs-{{ tab_index }}">
+
+    <form id = "selectForm_{{ tab_index }}" method = "post">
+        {% csrf_token %}
+        <input type="hidden" value="1" id="page" name="page">
+        <input type="hidden" name="page_type" value="{{ tab_index }}">
+        {% if tab_index in '124'|make_list%}
+            <label> 部门 </label>
+            {% include "util/dropdown.html" with name="sel_kind" data=sel_kind_select|value_in_dict:tab_index id="sel_kind_"|add:tab_index only %}
+        {% else %}
+            <input type="hidden" name="sel_kind" value="1">
+        {% endif %}
+
+        {% if tab_index in '23'|make_list %}
+            <label>{{ page_details|value_in_dict:tab_index }}</label>
+            {% include "util/dropdown.html" with name="page_detail" data=page_detail_select|value_in_dict:tab_index id="page_detail_"|add:tab_index only %}
+        {% endif %}
+
+        <label> 限制 </label>
+        {% if tab_index not in '123'|make_list %}
+            {% include "util/dropdown.html" with name="product_id" select=limits|value_in_dict:tab_index data=limit_select.0 id="limit_"|add:tab_index only %}
+        {% else %}
+            {% include "util/dropdown.html" with name="product_id" select=limits|value_in_dict:tab_index data=limit_select.1 id="limit_"|add:tab_index only %}
+        {% endif %}
+
+        <div class = "up_list" style = "margin-top: 10px;height:300px;">
+            <div class="titleProduct">
+                <span>选择商品 </span>
+                <a href="javascript:void(0);" style="font-size:13px; padding-left:30px;" id="cmdReSelectAll_{{ tab_index }}">全不选</a>
+            </div>
+            <div class = "up_list_data_{{ tab_index }}">
+                {% include "admin/shopping_mall/productselect/list_view_item.html" with list_id="selectList_up_"|add:tab_index only %}
+            </div>
+        </div>
+    </form>
+    <div class ="down_list" style = "margin-top: 10px; height:50px;">
+        <form id = "filterForm_{{ tab_index }}" action = 'javascript:void(0);' method="post">
+            {% csrf_token %}
+            <input type="hidden" value="1" id="page" name="page">
+            <div class="titleProduct">
+                <span>此外商品 </span>
+                <a href="javascript:void(0);" style="font-size:13px; padding-left:30px;" id="cmdRecommend_{{ tab_index }}">选择</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {% if tab_index in '14'|make_list %}
+                    {% include "util/dropdown.html" with name="page_detail" data=page_detail_select.2 id="category_id_"|add:tab_index only %}
+                {% endif %}
+                &nbsp;&nbsp;&nbsp;<label> 商品名 </label>
+                <input type="text" name="product_name" id="product_name_{{ tab_index }}">&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="hidden" value="sell_amount" name="order_by" id="order_by_{{ tab_index }}">
+                <input type="hidden" value="0" name="sort_direction" id="sort_direction_{{ tab_index }}">
+                <a href="javascript:void(0);" id="by_amount_{{ tab_index }}" class="formButton">商品销量 ↑</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" id="by_price_{{ tab_index }}" class="formButton">商品价格</a>&nbsp;&nbsp;
+                <a href="javascript:void(0);" id="by_time_{{ tab_index }}" class="formButton">上架时间</a>&nbsp;&nbsp;
+            </div>
+            <div class="down_list_data_{{ tab_index }}">
+                {% include "admin/shopping_mall/productselect/list_view_item.html" with list_id="selectList_down_"|add:tab_index only %}
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        refreshWholeList({{ tab_index }});
+
+        $('#sel_kind_{{ tab_index }}, #page_detail_{{ tab_index }}, #limit_{{ tab_index }}').change(function()
+        {
+            refreshWholeList({{ tab_index }});
+        });
+
+        $('#cmdReSelectAll_{{ tab_index }}').click(function(){
+            $.ajax({
+                type: "GET",
+                url: 'removeAll',
+                data: $('#selectForm_{{ tab_index }}').serialize(),
+                success: function(result){
+                    refreshWholeList({{ tab_index }});
+                }
+            });
+        });
+
+        $('#cmdRecommend_{{ tab_index }}').click(function(){
+            var selected = "";
+            var deselected = "";
+            var selObject = $("#selectList_down_{{ tab_index }} .items .productImageList input:checkbox");
+
+            for(i = 0; i < selObject.length; i++){
+                if(selObject.eq(i).attr("checked")){
+                    if(selected != "") selected += ",";
+                    selected += selObject.eq(i).attr("value");
+                }
+            }
+            selObject = $("#selectList_up_{{ tab_index }} .items .productImageList input:checkbox");
+            for(i = 0; i < selObject.length; i++)
+                if(!(selObject.eq(i).attr("checked"))){
+                    if(deselected != "") deselected += ",";
+                    deselected += selObject.eq(i).attr("value");
+                }
+
+            var data = $('#selectForm_{{ tab_index }}').serialize() + '&selected=' + selected + '&deselected=' + deselected;
+
+            $.ajax({
+                type: "GET",
+                url: 'update_selection',
+                data: data,
+                success: function(result){
+                    refreshWholeList({{ tab_index }});
+                },
+                error: function(x,e){
+                    alert(x.responseText);
+                }
+            });
+        });
+
+        $('#product_name_{{ tab_index }}, #category_id_{{ tab_index }}').change(function(){
+            refreshDownListView({{ tab_index }});
+        });
+
+        $('#by_amount_{{ tab_index }}').click(function()
+        {
+            updateSort({{ tab_index }}, 'sell_amount', '#by_amount_{{ tab_index }}');
+        });
+
+        $('#by_price_{{ tab_index }}').click(function()
+        {
+            updateSort({{ tab_index }}, 'price_now', '#by_price_{{ tab_index }}');
+        });
+
+        $('#by_time_{{ tab_index }}').click(function()
+        {
+            updateSort({{ tab_index }}, 'reg_date', '#by_time_{{ tab_index }}');
+        });
+    });
+
+    function moveBefore{{ tab_index }}(myself)
+    {
+        var orderNum = parseInt($(myself).parent().attr("orderNum"));
+        $(myself).parent().attr("orderNum", orderNum-1);
+        var index = (orderNum - 2) % 5;
+
+        if(index > -1)
+        {
+            $("#selectList_up_{{ tab_index }} .items .thumb-1").eq(index).attr("ordernum", orderNum);
+            saveOrderNumData{{ tab_index }}();
+        }
+    }
+
+    function moveNext{{ tab_index }}(myself)
+    {
+        var orderNum = parseInt($(myself).parent().attr("orderNum"));
+        $(myself).parent().attr("orderNum", orderNum+1);
+        var index = (orderNum) % 5;
+        if(index < $("#selectList_up_{{ tab_index }} .items .thumb-1").length)
+        {
+            $("#selectList_up_{{ tab_index }} .items .thumb-1").eq(index).attr("ordernum", orderNum);
+            saveOrderNumData{{ tab_index }}();
+        }
+    }
+
+    function saveOrderNumData{{ tab_index }}()
+    {
+        var strReOrderNum = "";
+        for(i = 0; i < $("#selectList_up_{{ tab_index }} .items .thumb-1").length; i++)
+        {
+            var divObj = $("#selectList_up_{{ tab_index }} .items .thumb-1").eq(i);
+            strReOrderNum += divObj.attr("id") + "@" + divObj.attr("orderNum") + "@";
+        }
+
+        var data = $('#selectForm_{{ tab_index }}').serialize() + '&order_str=' + strReOrderNum;
+        $.ajax({
+            type: "GET",
+            url: 'reorder',
+            data: data,
+            success: function(result){
+                refreshUpListView({{ tab_index }});
+            },
+            error: function(x,e){
+                alert(x.responseText);
+            }
+        });
+    }
+</script>

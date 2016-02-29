@@ -1,0 +1,8 @@
+{# name, select, data, id #}
+<select name="{{ name }}" id="{{ id }}">
+    {% for value, title in data %}
+        <option {% if value == select %}selected{% endif %} value="{{ value }}">
+            {{ title }}
+        </option>
+    {% endfor %}
+</select>

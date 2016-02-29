@@ -1,0 +1,26 @@
+{#data:[Product,order_num], view_data=[tab_index, is_up=1]#}
+{% load i18n admin_static %}
+
+<style type="text/css">
+    div.productImageList {width:160px; float:left; padding:5px;}
+    div.pager {float:left; }
+</style>
+
+<div class="productImageList">
+    <div class="thumb-1" id = "{{ data.0.id }}" orderNum="{{ data.1 }}" style="position: relative; cursor:default; width: 140px; cursor: pointer; height:160px; background:url('/static/images/productImages/{{ data.0.id }}_1_130.jpg') no-repeat; border: 1px solid #CDCDCD; margin-right: 10px; margin-left: 10px;" onclick='divToggleCheck_not(this);'>
+        {% if view_data.1 %}
+            <img src="{% static 'images/btnPrev32_n.gif'%}" style="cursor:pointer;float:left;" class="moveBefore{{view_data.0}}" onclick="moveBefore{{view_data.0}}(this);">
+            <img src="{% static 'images/btnNext32_n.gif'%}" style="cursor:pointer;float:right;" class="moveNext{{view_data.0}}" onclick="moveNext{{view_data.0}}(this);">
+        {% endif %}
+        {% if view_data.0 == '7' and view_data.1 %}
+            <div style="clear:both;"></div>
+            <div style="margin-top:90px; margin-left: 10px; width:135px; float:right; text-align:left; font-size:14px; color: #337733;">
+                积分价 <input class = "__pointPrice" data-msg-required=' ' data-msg-number=' ' required type="number" style="width:40px; border:solid 1px #333333; height:18px;   text-align:center; margin-bottom: 2px;" value="{{ data.0.point_price }}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR>
+                货币价 <input class = "__pointPrice" data-msg-required=' ' data-msg-number=' ' required type="number" style="width:40px; border:solid 1px #333333; height:18px; text-align:center;" value="{{ data.0.point_low_price }}">&nbsp;
+                <a style="color:mediumblue; cursor:pointer;font-size:14px;" value="{{ data.0.id }}" onmouseover="javascript:this.style.color='red';this.style.textDecoration='underline';" onmouseout="javascript:this.style.color='mediumblue';this.style.textDecoration='none';" onclick="updateSum(this);">确认</a>
+            </div>
+        {% endif %}
+    </div>
+    <input type=checkbox {% if view_data.1 %} checked {% endif %} value="{{ data.0.id }}" id="{{ data.0.id }}" style="display:block; float:left; margin-left: 10px; " >
+    <span style="cursor:pointer; font-size:13px; line-height:16px; color:#BB3333; word-break:break-all; height:48px;overflow:hidden; width:120px; display:block; float:left;" onclick='spanToggleCheck(this);'>&nbsp{{ data.0.name }} <BR> {{ data.0.type }} <BR> <font color=mediumblue>￥{{ data.0.price_now }}</font> <font color=#777777 style="text-decoration:line-through;">(￥{{ data.0.market_price }})</font></span>
+</div>

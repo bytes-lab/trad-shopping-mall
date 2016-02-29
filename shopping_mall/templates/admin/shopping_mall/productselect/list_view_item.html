@@ -1,0 +1,38 @@
+{% load custom_tags %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if data.has_previous %}
+            <a class="pager_prev" href="javascript:void(0);"><< Prev</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ data.number }} of {{ data.paginator.num_pages }}.
+        </span>
+
+        {% if data.has_next %}
+            <a class="pager_next" href="javascript:void(0);">Next >></a>
+        {% endif %}
+    </span>
+</div>
+
+<div class="clear"></div>
+<script type="text/javascript">
+    {% if extra_data.1 %}
+        $("#selectForm_{{ extra_data.0 }} .pager_next").bind("click", function(){
+            up_other_page({{ extra_data.0 }}, 1);
+        });
+        $("#selectForm_{{ extra_data.0 }} .pager_prev").bind("click", function(){
+            up_other_page({{ extra_data.0 }}, -1);
+        });
+    {% else %}
+        $("#filterForm_{{ extra_data.0 }} .pager_next").bind("click", function(){
+            down_other_page({{ extra_data.0 }}, 1);
+        });
+        $("#filterForm_{{ extra_data.0 }} .pager_prev").bind("click", function(){
+            down_other_page({{ extra_data.0 }}, -1);
+        });
+    {% endif %}
+</script>
+{% include "util/list_view.html" with id=list_id  data_provider=data item_view="admin/shopping_mall/productselect/product_item.html" view_data=extra_data only %}
+

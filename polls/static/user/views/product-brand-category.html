@@ -1,0 +1,42 @@
+﻿<div class = "row">
+	<div class = "col-md-12" style="margin-top:12px;">
+		<img class="img-responsive" src="/static/images/imageSlide1/6_slide.jpg">
+	</div>
+</div>
+<div class="row">
+	<div 
+	<div class="tabbable tabbable-custom">
+	<div class = "col-md-10" style="margin-top:30px;">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#" data-toggle="tab" ng-click="data.sortkey = 'sell_amount'">销量</a></li>
+			<li class=""><a href="#" data-toggle="tab" ng-click="data.sortkey = 'price_now'">价格</a></li>
+			<li class=""><a href="#" data-toggle="tab" ng-click="data.sortkey = 'reg_date'">上架时间</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active">
+				<div class="row">
+					<div class="col-md-3" ng-repeat="item in data.product_all | filter:categoryFilterFn | range:any_pager.cur:data.pageSize | orderBy : data.sortkey">
+						<div class="mix-inner">
+						<a href = "#" ng-click="viewProductDetail(item)" style="text-align:center;">
+							<img src="/static/images/productImages/{{item.id}}_1_160.jpg" alt="Product Image" default-image>
+							<div style="overflow:hidden;word-break:break-all;height:32px;line-height: 16px;">{{item.name}}</div>
+							<div style="overflow:hidden;word-break:break-all;height:30px;line-height: 16px;"><span style="color:black;">商城价: </span><span style="color:red; font-weight:bold;">{{item.price_now | currency:'￥'}}</span></div>
+						</a>				
+						</div>
+					</div>
+				</div>
+				<div class = "row">
+					<ul class="pagination pagination-alt pull-right"  ng-show="showPagination(data.product_all, data.pageSize, any_pager)" style="margin-right:30px;">
+						<li ng-class="setIndex(item, $index)"><a href="javascript:void(0);" ng-click="prevPage(any_pager)"><i class="fa fa-angle-left"></i></a></li>						
+						<li ng-class="getPageClass(any_pager, page, 'active')" ng-repeat="page in getPages(any_pager)">
+							<a href="javascript:void(0);"  ng-click="selectPage(any_pager, page)">{{page}}</a>
+						</li>
+						<li><a href="javascript:void(0);"  ng-click="nextPage(any_pager)"><i class="fa fa-angle-right"></i></a></li>
+					</ul>	
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	</div>
+</div>

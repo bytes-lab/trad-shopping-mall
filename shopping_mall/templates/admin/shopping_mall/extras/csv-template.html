@@ -1,0 +1,4 @@
+﻿Id, Name, Brand, Type, Code, Color, Origin_place
+{% for row in data %}
+    "{{ row.id|addslashes }}", "{{ row.name|addslashes }}", "{{ row.brand|addslashes }}", "{{ row.type|addslashes }}", "{{ row.code|addslashes }}", "{{ row.color|addslashes }}", "{{ row.origin_place|addslashes }}"
+{% endfor %}

@@ -1,0 +1,37 @@
+{#id, data_provider, item_view, view_data#}
+
+{#<div class="pagination">#}
+{#    <span class="step-links">#}
+{#        {% if data_provider.has_previous %}#}
+{#            <a class="pager_prev" href="javascript:void(0);"><< Prev</a>#}
+{#        {% endif %}#}
+{##}
+{#        <span class="current">#}
+{#            Page {{ data_provider.number }} of {{ data_provider.paginator.num_pages }}.#}
+{#        </span>#}
+{##}
+{#        {% if data_provider.has_next %}#}
+{#            <a class="pager_next" href="javascript:void(0);">Next >></a>#}
+{#        {% endif %}#}
+{#    </span>#}
+{#</div>#}
+{##}
+{#<div class="clear"></div>#}
+
+<div id="{{ id }}">
+    <div class="items">
+        {% for e_data in data_provider %}
+            {% include item_view with view_data=view_data data=e_data only %}
+        {% endfor %}
+    </div>
+</div>
+
+{#<script type="text/javascript">#}
+{#    $(".up_list_data_5 .pager_next").bind("clicks", function(){#}
+{#        alert('jks self');#}
+{#    });#}
+
+{#    $('.pager_next').click(function(){#}
+{#        $("#selectForm_3 .pager_next").trigger("clicks");#}
+{#    });#}
+{#</script>#}

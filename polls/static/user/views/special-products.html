@@ -1,0 +1,41 @@
+﻿<div class="portlet box yellow tabbable" ng-controller="specialProductCtrl">
+	<div class="portlet-title">
+		<div class="caption"><i class="fa fa-reorder"></i>Special Products</div>
+	</div>
+	<div class="portlet-body">
+		<div class=" portlet-tabs">
+			<ul class="nav nav-tabs">
+				<li class=""><a href="#" ng-click="data.sel_kind=3">促 销</a></li>
+				<li class=""><a href="#" ng-click="data.sel_kind=2">打 折</a></li>
+				<li class=""><a href="#" ng-click="data.sel_kind=1">特 价</a></li>
+				<li class=""><a href="#" ng-click="data.sel_kind=0">新 品</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class = "row">
+					<div class="col-md-3" ng-repeat="item in data.special_products[data.sel_kind].products | filter:categoryFilterFn">
+						<div class="mix-inner">
+							<a href = "#" ng-click="viewProductDetail(item)" style="text-align:center;">
+								<img src="/static/images/productImages/{{item.id}}_1_160.jpg" alt="Product Image" default-image>
+								<div style="overflow:hidden;word-break:break-all;height:32px;line-height: 16px;">{{item.name}}</div>
+								<div style="overflow:hidden;word-break:break-all;height:30px;line-height: 16px;">
+									<span style="color:grey; text-decoration:line-through;" ng-if="(data.sel_kind == 1) || (data.sel_kind == 3)">
+										{{item.market_price | currency:'￥'}}
+									</span>
+									<span style="color:red; font-weight:bold;">
+										{{item.price_now | currency:'￥'}}
+									</span>
+									<span style="color:blue; font-weight:bold;" ng-if="data.sel_kind == 2">
+										({{item.discount_rate / 10}}折)
+									</span>
+								</div>
+							</a>				
+						</div>
+						<a href="#" class="btn btn-xs green" ng-click="addProductToCart(item)">购买 <i class="fa fa-shopping-cart"></i></a>
+						<a href="#" class="btn btn-xs yellow" ng-click="addProductToCart(item)">收藏 <i class="fa fa-plus"></i></a>
+						<a href="#" class="btn btn-xs green" ng-click="addProductToCompare(item)">对比 <i class="fa fa-chain-broken"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

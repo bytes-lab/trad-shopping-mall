@@ -1,0 +1,17 @@
+{% load i18n %}
+<h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endblocktrans %}</h3>
+
+<select onchange="filtering(this)" style="margin:10px 15px ;">
+    {% for choice in choices %}
+        <option {% if choice.selected %} selected="selected" {% endif %} value="{{ choice.query_string }}">
+            {{ choice.display }}
+        </option>
+    {% endfor %}
+</select>
+
+<script>
+    function filtering(myself)
+    {
+        window.location.href = myself.value;
+    }
+</script>

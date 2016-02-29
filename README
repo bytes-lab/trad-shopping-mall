@@ -1,0 +1,11 @@
+This is the shopping mall site for XinZhou ShangCheng in China.
+
+The Admin site (back-end) has complex and thorough functions.
+
+The front end was developed with AngularJS, Twitter Bootstrap.
+Thus it is completely responsive.
+    Its url is /static/user/index.html
+
+DBMS is PostgreSQL.
+It was deployed on Apache Server with WSGI module.
+It was fully tested.

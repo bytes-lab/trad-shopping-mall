@@ -1,0 +1,125 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/tab_vertical.css' %}" />
+    <script type="text/javascript" src="{% static 'admin/js/jquery-1.8.2.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'admin/js/ui/jquery.ui.core.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'admin/js/ui/jquery.ui.widget.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'admin/js/ui/jquery.ui.tabs.js' %}" ></script>
+
+    <style>
+        .pagination{
+            float: right;
+            margin-right: 150px;
+            margin-bottom: 15px;
+        }
+        .pager_prev{
+        }
+        .pager_next{
+        }
+    </style>
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">首页</a></li>
+            <li><a href="#tabs-2">分类</a></li>
+            <li><a href="#tabs-3">品牌</a></li>
+            <li><a href="#tabs-4">优惠</a></li>
+            <li><a href="#tabs-5">家电下乡</a></li>
+            <li><a href="#tabs-6">以旧换新</a></li>
+            <li><a href="#tabs-7">积分</a></li>
+        </ul>
+        {% for tab_index in '1234567'|make_list %}
+            {% include 'admin/shopping_mall/productselect/tab_item.html' %}
+        {% endfor %}
+    </div>
+
+<script type="text/javascript">
+    $( "#tabs" ).tabs();
+
+    function refreshWholeList(tab_index)
+    {
+        refreshUpListView(tab_index);
+        refreshDownListView(tab_index);
+    }
+
+    function refreshUpListView(tab_index)
+    {
+        var page = $('#selectForm_'+tab_index+' #page').val();
+        refreshListView(tab_index, 'up_list_data_'+tab_index, 'selectList_up_'+tab_index, 1, page);
+    }
+
+    function refreshDownListView(tab_index)
+    {
+        var page = $('#filterForm_'+tab_index+' #page').val();
+        refreshListView(tab_index, 'down_list_data_'+tab_index, 'selectList_down_'+tab_index, 0, page);
+    }
+
+    function refreshListView(tab_index, divId, listId, is_up, page)
+    {
+        var formdata = $('#selectForm_'+tab_index).serialize();
+        var filterdata = $('#filterForm_'+tab_index).serialize();
+        var data = formdata + '&divId=' + divId + '&listId=' + listId + '&is_up=' + is_up + '&' + filterdata + '&page=' + page;
+
+        $.ajax({
+            type: "GET",
+            url: 'list_item',
+            data: data,
+            success: function(result){
+                $('.' + divId).html(result);
+            },
+            error: function(x,e){
+                alert(x.responseText);
+            }
+        });
+    }
+
+    function up_other_page(tab_index, diff)
+    {
+        page = $('#selectForm_'+tab_index+' #page').val() * 1 + diff;
+        $('#selectForm_'+tab_index+' #page').val(page);
+        refreshUpListView(tab_index);
+    }
+
+    function down_other_page(tab_index, diff)
+    {
+        page = $('#filterForm_'+tab_index+' #page').val() * 1 + diff;
+        $('#filterForm_'+tab_index+' #page').val(page);
+        refreshDownListView(tab_index);
+    }
+
+    function spanToggleCheck(myself)
+    {
+        var checked = $(myself).prev().attr('checked');
+        if(checked == 'checked')
+            $(myself).prev().attr('checked', false);
+        else
+            $(myself).prev().attr('checked', true);
+    }
+
+    function updateSort(tab_index, str_order, tag_id)
+    {
+        var textArr = new Array(" ↑", " ↓");
+        var orderBy = $('#order_by_'+tab_index).attr('value');
+        var sortDirection = $('#sort_direction_'+tab_index).attr('value');
+
+        $('#by_amount_'+tab_index).text($('#by_amount_'+tab_index).text().substring(0,4));
+        $('#by_price_'+tab_index).text($('#by_price_'+tab_index).text().substring(0,4));
+        $('#by_time_'+tab_index).text($('#by_time_'+tab_index).text().substring(0,4));
+
+        if(orderBy == str_order)
+        {
+            sortDirection = 1 - sortDirection;
+        } else {
+            sortDirection = 0;
+            $('#order_by_'+tab_index).attr('value', str_order);
+        }
+
+        $('#sort_direction_'+tab_index).attr('value', sortDirection);
+        $(tag_id).text($(tag_id).text().substring(0,4)+textArr[sortDirection]);
+        refreshDownListView(tab_index);
+    }
+
+</script>
+
+{% endblock %}

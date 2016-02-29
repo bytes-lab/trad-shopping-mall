@@ -1,0 +1,7 @@
+﻿.compare {background: white; border: 1px solid #C4C4C4; width: 200px;}
+.compare .mt { background: #F3F3F3; height: 24px; padding: 3px 8px 5px 5px; }
+.compare h5 { float: left; font-size: 12px; font-wieght: bold;}
+.compare .extra {background: url(../images/bg_regist.jpg) no-repeat -207px -66px; cursor: pointer; float: right; height: 13px; margin-top: 2px; width: 13px; }
+.compare .mc {padding: 2px;}
+.compare .mc li { border: 1px solid #E5E5E5; margin-bottom: 0; padding: 4px 12px 4px 4px; list-style: none;}
+.compare .mb {padding: 5px 0px; text-align: center;}

@@ -1,0 +1,26 @@
+#content-main{
+    position:relative;
+    top:100px;
+    margin: 0px auto;
+    background: url("../images/passwordBack.gif") no-repeat;
+    width:348px;
+    height:205px;
+}
+
+#id_username{
+    border:0;
+    position:absolute;
+    left:158px;
+    top:76px;
+    width:134px;
+    height:17px;
+}
+
+#id_password{
+    border:0;
+    position:absolute;
+    left:158px;
+    top:122px;
+    width:134px;
+    height:17px;
+}

@@ -1,0 +1,33 @@
+﻿<div class="portlet box green tabbable" ng-if="data.brands.recommended[data.brandCategory].length">
+	<div class="portlet-title">
+		<div class="caption"><i class="fa fa-reorder"></i>推 荐 品 牌</div>
+	</div>
+	<div class="portlet-body">
+		<div class="tab-content">
+			<div class="row">
+				<div class="col-md-2" ng-repeat="item in data.brands.recommended[data.brandCategory]">
+					<a href="#" style="padding:15px;" ng-click="setBrand(item)">
+						<img src="/static/images/brandImages/108_{{item}}_brand2.jpg"></img>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="portlet box yellow tabbable" ng-if="data.brands.other[data.brandCategory].length">
+	<div class="portlet-title">
+		<div class="caption"><i class="fa fa-reorder"></i>其 他 品 牌</div>
+	</div>
+	<div class="portlet-body">
+		<div class="tab-content">
+			<div class="row">
+				<div class="col-md-2" ng-repeat="item in data.brands.other[data.brandCategory]">
+					<a href="#" style="padding:15px;" ng-click="setBrand(item)">
+						<img style="border-color:#DEDEDE;" src="/static/images/brandImages/108_{{item}}_brand2.jpg"  default-image>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

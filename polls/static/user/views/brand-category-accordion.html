@@ -1,0 +1,12 @@
+﻿<div class="panel-group">
+	<div class="panel panel-default" ng-repeat="(cate, val) in data.selectedBrandCategories">
+	  <div class="panel-heading" ng-repeat="(title, count) in val">
+		<a class="panel-toggle" href = "#" ng-click="setSelectBrandCategory(cate)">
+			<i class="fa fa-list-ul" ng-if="cate=='0000'"></i>
+			<i class="fa fa-angle-right" ng-if="cate!='0000'"></i>
+			&nbsp;&nbsp;
+			{{title}} ( {{count}} )
+		</a>
+	  </div>
+	</div>
+</div>
